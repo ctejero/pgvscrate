@@ -1,0 +1,10 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1558567028796,105310,Q1PricingSummaryReportQuery,200,OK,UsuarioUnico 1-1,text,true,,257,0,1,1,null,105300,0,349
+1558567134185,94364,Q3ShippingPriorityQuery,200,OK,UsuarioUnico 1-1,text,true,,415,0,1,1,null,94338,0,0
+1558567228551,63710,Q6ForecastingRevenueChangeQuery ,200,OK,UsuarioUnico 1-1,text,true,,28,0,1,1,null,63710,0,0
+1558567292290,22587,Q11ImportantStockIdentificationQuery,200,OK,UsuarioUnico 1-1,text,true,,17,0,1,1,null,22587,0,1
+1558567298162,63196,Q12ShippingModesAndOrderPriorityQuery,200,OK,UsuarioUnico 1-1,text,true,,59,0,1,1,null,63196,0,0
+1558567361359,35200,Q14PromotionEffectQuery,200,OK,UsuarioUnico 1-1,text,true,,33,0,1,1,null,35200,0,0
+1558567396814,31947,Q15TopSupplierQuery,200,OK,UsuarioUnico 1-1,text,true,,49,0,1,1,null,31947,0,1
+1558567428761,16213,Q16Parts/SupplierRelationshipQuery,200,OK,UsuarioUnico 1-1,text,true,,75,0,1,1,null,16213,0,0
+1558567445074,114310,Q18LargeVolumeCustomerQuery,200,OK,UsuarioUnico 1-1,text,true,,3000,0,1,1,null,114173,0,0

@@ -1,0 +1,9 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1558539631192,40097,L1LoadPart,200,OK,UsuarioUnico 1-1,text,true,,14,0,1,1,null,40096,0,538
+1558539671298,109,L2LoadRegion,200,OK,UsuarioUnico 1-1,text,true,,9,0,1,1,null,108,0,0
+1558539671407,117,L3LoadNation,200,OK,UsuarioUnico 1-1,text,true,,10,0,1,1,null,116,0,0
+1558539671524,1515,L4LoadSupplier,200,OK,UsuarioUnico 1-1,text,true,,13,0,1,1,null,1515,0,0
+1558539673040,16402,L5LoadCustomer,200,OK,UsuarioUnico 1-1,text,true,,14,0,1,1,null,16402,0,0
+1558539689443,111304,L6LoadPartSupp,200,OK,UsuarioUnico 1-1,text,true,,15,0,1,1,null,111303,0,0
+1558539800748,284135,L7LoadOrders,200,OK,UsuarioUnico 1-1,text,true,,15,0,1,1,null,284135,0,1
+1558540084962,1788210,L8LoadLineItem,200,OK,UsuarioUnico 1-1,text,true,,16,0,1,1,null,1788141,0,0

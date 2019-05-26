@@ -1,0 +1,42 @@
+ 
+@book{scalzo2018database,
+  author    = {Scalzo, Bert},
+  title     = {Database Benchmarking and Stress Testing},
+  year      = {2018},
+  publisher = {Springer}
+}
+
+@book{tpc2018benchmark,
+  author  = {{Transaction Processing Performance Council}},
+  title   = {TPC Benchmark H (Decision Support) Standard Specification},
+  year    = {2018},
+  edition = {{2.18.0}}
+}
+
+@book{matam2017performance,
+  author    = {Matam, Sai and Jain, Jagdeep},
+  title     = {Pro Apache JMeter},
+  year      = {2017},
+  publisher = {Springer}
+}
+
+@misc{jmeter,
+  author       = {{The Apache Software Foundation}},
+  title        = {User's Manual},
+  howpublished = {https://jmeter.apache.org/usermanual/index.html},
+  note         = {[En linea; visitado el 25/04/2019]}
+}
+ 
+@misc{postgresql,
+  author       = {{The PostgreSQL Global Development Group}},
+  title        = {PostgreSQL 11 Documentation},
+  howpublished = {https://www.postgresql.org/docs/11/},
+  note         = {[En linea; visitado el 25/04/2019]}
+}
+
+@misc{crate,
+  author       = {Crate.io},
+  title        = {Crate Documentation},
+  howpublished = {https://crate.io/docs/crate/reference/en/latest/},
+  note         = {[En linea; visitado el 25/04/2019]}
+}

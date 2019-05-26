@@ -1,0 +1,346 @@
+\documentclass[11pt, twocolumns]{article}
+
+\usepackage{geometry}
+\geometry{a4paper, left=2cm, top=2cm, right=2cm, bottom=2cm}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{pgfplots}
+
+\title{Comparativa PostgreSQL vs Crate}
+\author{Tejero, Carlos Germán}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Hacer un resumen de no mas de 150 palabras acerca del trabajo.
+\end{abstract}
+
+
+\begin{multicols}{2}
+
+
+\section{Introducción}
+Contar de que viene el trabajo
+
+
+\section{PostgreSQL}
+Como figura en su documentación \cite{postgresql}, la historia de este gestor de bases de datos relacional, comienza en el año 1986, con el proyecto POSTGRES a cargo del profesor Michael Stonebraker. La primera demostración del mismo, fue presentada en la conferencia ACM-SIGMOD en el año 1988.
+\par
+En 1994 Andrew Yu and Jolly Chen agregarían un interprete del lenguaje SQL al proyecto, que sería renombrado como Postgre95, un sucesor de codigo abierto de POSTGRES.
+\par
+Ya en 1996, se modificó nuevamente su nombre a PostgreSQL para reflejar en forma más clara la relación entre el nombre original del proyecto POSTGRES y su compativilidad con SQL.
+\par
+En la actualidad PostgreSQL es un gestor de base de datos objeto-relacional destinado principalmente a OLTP y en menor medida a OLAP, de código abierto, muy apegado a los estandars SQL, que ofrece numerosas características avanzadas como:
+\begin{itemize}
+  \item Tipos de datos personalizados
+	\item Herencia de tablas
+  \item Transacciones anidadas
+	\item MVCC
+  \item Replicación física y lógica
+	\item Espacios de tablas
+	\item Particionamiento de tablas
+	\item Y la posibilidad de todo tipo de extensiones
+\end{itemize}
+\par
+Al momento de redactar este documento la última versión disponible es la 11.2, que se utilizó para la comparativa.
+
+
+\section{Crate}
+Crate es un gestor de base de datos de código abierto, para procesamiento en tiempo real y de datos producidos por máquinas. La primera versión fue lanzada por la empresa Crate.io en el año 2016.
+\par
+La característica más distintiva del producto, es que integra un gestor de base de datos SQL distribuido con un almacén de datos totalmente indexado y buscable, orientado a documentos.
+\par
+Utiliza el analizador de SQL de PrestoDB (FaceBook), Elasticsearch (Elasticsearch B.V.) and Lucene (Apache) para el transporte, busqueda y almacenamiento de los datos. Lo hace ideal para realizar rápidas búsquedas de texto y análisis de datos grandes volúmenes de datos de máquina.
+\par
+Al momento de escribir este documento, la ultima versión disponible del mismo es la 3.3.2 que se utilizó para la comparativa.
+
+
+\section{TPC}
+TPC es una corporación sin fines de lucro cuya misión es definir puntos de referencia (benchmarks) en el procesamiento de transacciones por gestores de  bases de datos, objetivos y verificables, capaces de ser difundidos.
+\par
+Los puntos de referencia (benchmarks) producidos por TPC, permiten medir el desempeño del procesamiento de transacciones y del gestor de base de datos en términos de cuántas transacciones puede realizar un sistema y una base de datos determinados por unidad de tiempo, por ejemplo, transacciones por segundo o transacciones por minuto.
+\par
+El primer punto de referencia publicado fue TPC Benchmark A (TPC-A) en el año 1989, hoy en día obsoleto. En la actualidad TPC tiene numerosos puntos de referencia, de los que se destacan:
+\begin{itemize}
+  \item TCP-C
+  \item TPC-E
+  \item TPC-H
+  \item TPC-DS
+\end{itemize}
+\par
+Tanto TPC-C como TPC-E, son puntos de referencia orientados a OLTP. TPC-C es más viejo y simple, en cambio TPC-E es más moderno y complejo.
+\par
+TPC-H y TPC-DS son puntos de referencia orientados al soporte a la toma de desiciones. TPC-H consiste en un conjunto de consultas (22) ad-hoc que examina grandes volumenes de datos con un alto grado de complejidad. En cambio TCP-DS posee un complejo esquema estrella de data warehouse, con un gra número de consultas (100) complejas.
+\par
+Dado el alcance del presente trabajo, se decidió optar por realizar la comparativa utilizando el punto de referencia TPC-H, adaptado de forma de poder ejecutarse en los dos gestores de bases de datos elegidos (PostgreSQL y Crate).
+
+
+\section{TPC-H}
+La descripción de este punto de referencia, se encuantra en su especificacion \cite{tpc2018benchmark}:
+TPC-H se compone de un conjunto de consultas de negocio (a las que se les ha dado un contexto realista) diseñado para ejercer las funcionalidades del sistema de bases de datos en una manera representativa de análisis de complejas aplicaciones de negocio.
+\par
+Auque una definicion más clara figura en \cite{scalzo2018database}:
+TPC-H es una colección de 22 consultas SQL muy complejas, típicas para una base de datos de informes que soporta un sistema OLTP. Estas consultas tienen por objeto imitar las consultas de análisis de datos ad-hoc
+de los usuarios finales, a través de herramientas de inteligencia de negocio con el fin de responder a preguntas críticas de negocios.
+\par
+El esquema de datos de TPC-H, es el típico de un sistema OLTP tradicional orientado a venta de productos, como se muestra en la Figura \ref{figura:tpch_esquema}. Cuenta con ocho (8) tablas:
+\begin{enumerate}
+  \item Region (continente)
+  \item Nation (pais)
+  \item Customer (cliente)
+  \item Supplier (proveedor)
+  \item Orders (pedido)
+  \item LineItem (lineas de peido)
+  \item Part (producto)
+  \item PartSupp (producto-proveedor)
+\end{enumerate}
+\begin{figure}[H]
+  \includegraphics[scale=0.6]{tpch_esquema.png}
+  \centering
+  \caption{Esquema TPC-H (Extraido de \cite{tpc2018benchmark})}
+  \label{figura:tpch_esquema}
+\end{figure}
+\par
+Como ya fue menconado con antelación, cuenta con veintidos (22) consultas para ejecutar:
+\begin{enumerate}
+  \item Pricing Summary Report Query
+  \item Minimum Cost Supplier Query
+  \item Shipping Priority Query
+  \item Order Priority Checking Query
+  \item Local Supplier Volume Query
+  \item Forecasting Revenue Change Query
+  \item Volume Shipping Query
+  \item National Market Share Query
+  \item Product Type Profit Measure Query)
+  \item Returned Item Reporting Query
+  \item Important Stock Identification Query
+  \item Shipping Modes and Order Priority Query
+  \item Customer Distribution Query
+  \item Promotion Effect Query
+  \item Top Supplier Query
+  \item Parts/Supplier Relationship Query
+  \item Small-Quantity-Order Revenue Query
+  \item Large Volume Customer Query
+  \item Discounted Revenue Query
+  \item Potential Part Promotion Query
+  \item Suppliers Who Kept Orders Waiting Query
+  \item Global Sales Opportunity Query
+\end{enumerate}
+\par
+Además del esquema y las consultas, el punto de referencia cuenta con dos herramientas para generar el código SQL necesario para el gestor de base de datos elegido y los datos de carga. Estas herramientas son \textit{qgen}, el generado de SQL, y \textit{dbgen}, el generado de datos para poblar la base de datos.
+\par
+Ambas herramientas mencionadas, tienen soporte para los gestores de bases de datos: INFORMIX, DB2, Teradata, SQLSERVER, SYBASE, ORACLE y VECTORWISE, en los sistemas operativos ATT, DOS, HP, IBM, ICL, MVS, SGI, SUN, U2200, VMS, LINUX y WIN32. Esto supone un problema, dado que ninguno de los dos gestores elegidos para la comparativa estan soportados, por lo que se requiere realizar algunas adaptaciones al punto de referencia, para poder utilizarlo.
+
+
+\section{Adaptaciones}
+Como se emncionó anteiormente, TPC-H no tiene soporte para PostgreSQL y Crate. Para poder ser utilizado, se debieron realizar algunas adaptaciones y ajustes tanto al SQL/DDL para la creación del esquema, al SQL/DML de la consultas, como asi también a los datos de carga generados.
+\par
+Tanto para la generación de las consultas, como para la generación de los datos, se utilizó la opción de base de datos a ORACLE en el archivo \textit{Makefile} de TPC-H:
+\begin{verbatim}
+  DATABASE=ORACLE
+\end{verbatim}
+Esta opción fue considerada las más adecuada, dado que PostgreSQL tiene un alto grado de compatibilidad con ORACLE, y Crate busca versión tras versión alcanzar un mayor grado de compatibilidad con PostgreSQL.
+Para la generación de las consultas, se utilizó la herramienta \textit{qgen}:
+\begin{verbatim}
+for q in `seq 1 22`; do
+  DSS_QUERY=queries ./qgen $q > $q.sql
+done
+\end{verbatim}
+Y para la generación de los datos, se utilizó la herramiento \textit{dbgen}:
+\begin{verbatim}
+./dbgen -s 1 -f  
+\end{verbatim}
+
+\subsection{Adaptaciones para PostgreSQL}
+Para poder utilizar TPC-H con PostgreSQL no es necesario realizar grandes cambios. Sólo fueron requeridos dos pequeñas modificaciones a las consultas y a los datos generados.
+
+\subsubsection{Consultas generadas}
+Las consultas generedas para ORACLE, utilizan un mecanimos no estándar para limitar la cantidad de filas del resultado. Por ejemplo en la consulta \textit{1}:
+\begin{verbatim}
+WHERE rownum <= -1;
+\end{verbatim}
+Este podría haberse reemplazado por un mecanismo más estandar (FETCH FIRST..), sin embargo se decidió utilizar uno propio de PostgreSQL, ya que tambien es soportado por Crate. De esta forma cada consulta fue modificada, como por ejemplo la consulta \textit{1}:
+\begin{verbatim}
+LIMIT 1;
+\end{verbatim}
+
+\subsubsection{Datos generados}
+Los datos generados utilizando un formato similar a \textit{CSV}, utilizando el caracter \textit{|} como separador de registro, con extension \textit{.tbl}. Estos archivos pueden ser facilmente cargados utilizando la sentencia COPY de PostgreSQL, a no ser porque los mismos incluyen un caracter \textit{|} despues del ultimo registro. Para poder cargarlos se debió remover este caracter demás:
+\begin{verbatim}
+for i in `ls *.tbl`; do sed -i 's/|$//' $i; done
+\end{verbatim}
+
+\subsection{Adaptaciones para Crate}
+Dado que Crate es un gestor bastante reciente, posee aun numerosas limitaciones en comparación con gestores más antiguos y maduros. Esto hizo necesario relizar numerosas adaptaciones, a fin de poder utilizar TPC-H.
+
+\subsubsection{Esquema}
+Para la creación del esquema de la base de datos de TPC-H, se encontraron varias limitacione en cuanto a los tipos de datos soportados por Crate \cite{crate}. Los datos no soportdos utilizados por TPC-H fueron:
+\begin{itemize}
+  \item DATE
+  \item DECIMAL(15,2)
+  \item CHAR
+\end{itemize}
+Para salvar esta limitación se decidió reemplazar en la definición de la estructura cada tipo de datos no soportado, por un tipo de datos soportado de similares características. Los reemplazos realiados fueron:
+\begin{itemize}
+  \item DATE por TIMESTAMP
+  \item DECIMAL(15,2) por DOUBLE
+  \item CHAR por VARCHAR
+\end{itemize}
+Para hacer más justa la comparativa de rendimiento, y teniendo en cuenta que al modificar los tipos de datos, también se introducen diferencias en el procesamiento de los mismos, estos cambios también fueron introducidos en la definición del esquema para PostgreSQL.
+  
+\subsubsection{Consultas generadas}
+Para las consultas nuevamente se encontraron numerosas limitaciones. Las que pudieron se salvadas con pequeñas modificaciones se hicieron, pero las hicieron imposible la ejecución de alguna consulta, hicieron necesaria descartar la consulta no soportada.
+\par
+Una limitación, fué el pobre soporte para expresiones dentro de las consultas. Por ejemplo, en la clausula WHERE de la consulta \textit{1}:
+\begin{verbatim}
+WHERE l_shipdate >= '1993-09-01'
+  AND l_shipdate  < '1993-09-01' 
+                  + INTERVAL '3' MONTH  
+\end{verbatim}
+Fue necesario reescribirla, eliminando la expresión y tansformandola en una constante:
+\begin{verbatim}
+WHERE l_shipdate >= '1993-09-01'
+  AND l_shipdate  < '1993-12-01'  
+  
+\end{verbatim}
+De igual forma se procedió con todas las consultas que contenian expresiones no soportadas.
+\par
+Otra limitación, fue que Crate solo posee soporte para subconsultas no correlacionadas \cite{crate}. Esto no permite ejecutar ciertas de las consultas incluidas en TPC-H, dado que las mismas contiene subconsulas correlacionadas:
+\begin{itemize}
+  \item [2.] Minimum Cost Supplier Query
+  \item [4.] Order Priority Checking Query
+  \item [17.] Small-Quantity-Order Revenue Query
+  \item [20.] Potential Part Promotion Query
+  \item [21.] Suppliers Who Kept Orders Waiting Query
+  \item [22.] Global Sales Opportunity Query
+\end{itemize}
+Asi mismo, otra limitación encontrada, es la carencia de un planificador sofisticado \cite{crate}, como el presente en la mayoría de los gestores maduros. Sumado a esto, se encuentra el hecho de que para realizar reuniones solo posee soporte para el algoritmo \textit{hash join} (A menos que se fuerce un \textit{nested loop join}). Esto hace que consultas que incluyan varias tablas en la clausula \textit{FROM}, sean extremadamente lentas y requieran enormes cantidades de memoria. Eso afecta a las consultas:
+\begin{itemize}
+  \item [5.] Local Supplier Volume Query
+  \item [7.] Volume Shipping Query
+  \item [8.] National Market Share Query
+  \item [9.] Product Type Profit Measure Query
+\end{itemize}
+Dadas todas las limitaciones mencionadas, se decidió solamente realizar la comparativa utilizando las consultas:
+\begin{itemize}
+  \item [1.] Pricing Summary Report Query
+  \item [3.] Shipping Priority Query
+  \item [6.] Forecasting Revenue Change Query
+  \item [13.] Customer Distribution Query
+  \item [19.] Discounted Revenue Query
+  \item [10.] Returned Item Reporting Query
+  \item [11.] Important Stock Identification Query
+  \item [12.] Shipping Modes and Order Priority Query
+  \item [14.] Promotion Effect Query
+  \item [15.] Top Supplier Query
+  \item [16.] Parts/Supplier Relationship Query
+  \item [18.] Large Volume Customer Query
+\end{itemize}
+
+\subsubsection{Datos generados}
+Si bien Crate posee la sentencia \textit{COPY}, similar a PostgreSQL, eta posee muchas menos opciones de configuración. Esta sentencia solo permite cargar archivo \textit{CSV}, utilizando el caracter \textit{,} como separado de registro y el caracter \textit{"} para delimitar cadenas de caracteres.
+\par
+Para saltar estas limitaciones, se procedió a realizar el volcado de los datos desde PostgreSQL directamente en el formato esperado. Esto genera realizar un paso demás, ya que se deben cargar los datos primero en PostgreSQL, volcarlos nuevamente a archivos para luego cargarlos en Crate. Pero no produce ningun tipo de interferencia en la realización de las pruebas. 
+
+
+\section{JMeter}
+JMeter es una herramienta de código abierto mantenido por la Fundación apache para realizar pruebas de rendimiento de nivel industrial. Es un proyecto muy maduro, continuamente actualizado y revizado desde su creación en 2001.
+\par
+Como indica su página \cite{jmeter}, puede ser utilizado para probar el rendimiento tanto en recursos estáticos como dinámicos. Es capaz de simular carga a un servidor o grupo de servidores, para probar o para analizar el rendimiento general bajo diferentes tipos de carga.
+\par
+Las principales características de Apache JMeter incluyen:
+\begin{itemize}
+  \item Capacidad probar el rendimiento de:
+  \begin{itemize}
+    \item Aplicaciones Web (HTTP, HTTPS, etc)
+    \item Servicios Web SOAP / REST
+    \item FTP
+    \item Base de datos a través de JDBC
+    \item LDAP
+    \item Middleware orientado a mensajes (JMS)
+    \item Correo - SMTP(S), POP3(S) e IMAP(S)
+  \end{itemize}
+  \item IDE de prueba completo que permite la creación y la depuración del plan de prueba.
+  \item Modo de línea de comandos ejecutar las pruebas.
+  \item Completos informes en diferentes formatos de salida.
+  \item Portabilidad completa (100\% Java).
+  \item Soporte para muestreo simultáneo a través de múltiples subprocesos.
+  \item La posibilidad de realizar extensiones.
+\end{itemize}
+Al momento de escribir este documento, la ultima versión disponible de JMeter es la 5.1.1 que se utilizó para la comparativa.
+
+
+\section{Comparativa de rendimiento}
+Para la comparativa de rendimiento se realizaron cuatro planes de prueba \cite{matam2017performance}:
+\begin{enumerate}
+  \item Un plan de prueba para la carga de datos en Postgresql.
+  \item Un plan de prueba para la carga de datos en Crate.
+  \item Un plan de prueba de las consultas para PostgreSQL.
+  \item Un plan de prueba de las consultas para Crate.
+\end{enumerate}
+
+\subsubsection{Plan de prueba para carga}
+Los planes de prueba de carga para ambos gestores, utilizan la sentencia COPY. \ref{figura:plan_carga_pg}
+\begin{verbatim}
+COPY nation FROM '/tmp/nation.csv';
+\end{verbatim}
+\begin{figure}[H]
+  \includegraphics[scale=0.8]{plan_carga_pg.png}
+  \centering
+  \caption{Plan de prueba para carga de datos}
+  \label{figura:plan_carga_pg}
+\end{figure}
+
+\subsubsection{Plan de prueba para consultas}
+Los planes de prueba de las consultas para ambos gestores. Como se muestra en la figura \ref{figura:plan_consultas_pg}. 
+\begin{figure}[H]
+  \includegraphics[scale=0.6]{plan_consultas_pg.png}
+  \centering
+  \caption{Plan de prueba para consultas}
+  \label{figura:plan_consultas_pg}
+\end{figure}
+
+
+\section{Resultados}
+Resultados obtenidos
+Cuadros comparativos
+Gráficos
+\begin{figure}[H]
+\begin{tikzpicture}
+	\begin{axis}[
+		legend style={at={(0.5, -0.2)}, anchor=north, legend columns=-1},
+		ylabel={Milisegundos (en miles)},
+		xlabel={Filas (en millones)}
+	]
+	\addplot 
+	coordinates {(18,3000) (12,2000) (6,1000)};
+	\addplot 
+	coordinates {(18,3050) (12,2050) (6,1050)};
+	\legend{PostgreSQL,Crate}
+	\end{axis}
+\end{tikzpicture}
+    \caption{Gráfico de algo}
+	\label{gráfico:gr_algo}
+\end{figure}
+
+
+\section{Conclusiones}
+Que se puede concluir de toda esta cosa?
+
+
+\end{multicols}
+
+
+\bibliographystyle{acm}
+\bibliography{bibliografia}
+
+
+\end{document}
